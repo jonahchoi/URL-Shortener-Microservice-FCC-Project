@@ -27,8 +27,9 @@ let http = /^https?\:\/\//;
 
 app.post('/api/shorturl', (req, res)=>{
   let {url} = req.body;
+  console.log('original url', url);
   let dnsUrl = url.replace(http, '').replace(/\/$/, '');
-
+  console.log('dnsUrl', dnsUrl)
   dns.lookup(dnsUrl, (err, address)=>{
     if(err)return res.json({
       error: "invalid url"
@@ -40,7 +41,7 @@ app.post('/api/shorturl', (req, res)=>{
     }
     console.log(urls);
     links.push(urls);
-    
+    console.log('before json', urls)
     return res.json(urls);
   })
 })
