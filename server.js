@@ -18,7 +18,7 @@ app.get('/', function(req, res) {
 
 // Your first API endpoint
 app.get('/api/shorturl/:short_url', function(req, res) {
-  
+  let {short_url} = req.query;
   res.json({ greeting: 'hello API' });
 });
 
@@ -30,7 +30,8 @@ app.post('/api/shorturl', (req, res)=>{
   dns.lookup(url, (err, address)=>{
     if(err)return console.log(err);
     res.json({
-      original_url: url
+      original_url: url,
+      short_url: 1
     })
   })
 })
