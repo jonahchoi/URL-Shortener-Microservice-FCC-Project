@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const app = express();
+const bodyParser = require('body-parser');
 
 // Basic Configuration
 const port = process.env.PORT || 3000;
@@ -20,8 +21,10 @@ app.get('/api/shorturl/:short_url', function(req, res) {
   res.json({ greeting: 'hello API' });
 });
 
+app.use(bodyParser.urlencoded({extended: false}));
+
 app.post('/api/shorturl', (req, res)=>{
-  
+  console.log(req.body);
 })
 
 app.listen(port, function() {
