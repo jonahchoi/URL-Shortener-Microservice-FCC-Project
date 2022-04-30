@@ -32,21 +32,23 @@ app.post('/api/shorturl', (req, res)=>{
     if(err)return res.json({
       error: "invalid url"
     });
+    id++;
     let urls = {
       original_url: url,
       short_url: id
     }
     links.push(urls);
-    id++;
     
-    res.json(urls);
+    return res.json(urls);
   })
 })
 app.get('/api/shorturl/:inputId', function(req, res) {
   let {inputId} = req.params;
+  console.log(inputId)
   let urlObject = links.find((link)=> link.short_url.toString() === inputId);
+  console.log(urlObject);
   if(urlObject){
-    res.redirect(urlObject.original_url);
+    return res.redirect(urlObject.original_url);
   }
 });
 
