@@ -19,7 +19,11 @@ app.get('/', function(req, res) {
 // Your first API endpoint
 app.get('/api/shorturl/:short_url', function(req, res) {
   let {short_url} = req.query;
-  res.json({ greeting: 'hello API' });
+  links.map((link)=> {
+    if(link[short_url] === short_url){
+      res.redirect(link[original_url]);
+    }
+  })
 });
 
 app.use(bodyParser.urlencoded({extended: false}));
@@ -35,10 +39,14 @@ app.post('/api/shorturl', (req, res)=>{
     if(err)return res.json({
       error: "invalid url"
     });
-    res.json({
+    let urls = {
       original_url: url,
-      short_url: 1
-    })
+      short_url: id
+    }
+    links.push(urls);
+    id++;
+    
+    res.json(urls);
   })
 })
 
