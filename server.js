@@ -5,6 +5,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const dns = require('dns');
 
+
 // Basic Configuration
 const port = process.env.PORT || 3000;
 
@@ -17,8 +18,6 @@ app.get('/', function(req, res) {
 });
 
 // Your first API endpoint
-
-
 app.use(bodyParser.urlencoded({extended: false}));
 
 let links = [];
@@ -26,28 +25,25 @@ let id = 0;
 let http = /^https?\:\/\//;
 
 app.post('/api/shorturl', (req, res)=>{
-  let {url} = req.body;
-  console.log('original url:', url);
-  let dnsUrl = url.substr(0, url.indexOf('?'));
-  dnsUrl = dnsUrl.replace(http, '').replace(/\/$/, '');
+  let {url} = req.body;  
   
-  console.log('dnsUrl:', dnsUrl)
-  
+  let dnsUrl = (new URL(url)).hostname;
+    
   dns.lookup(dnsUrl, (err, address)=>{
     if(err)return res.json({
       error: "invalid url"
     });
+    
     id++;
     let urls = {
       original_url: url,
       short_url: id
     }
-    console.log(urls);
     links.push(urls);
-    console.log('before json', urls)
     return res.json(urls);
   })
 })
+
 app.get('/api/shorturl/:inputId', function(req, res) {
   let {inputId} = req.params;
   let urlObject = links.find((link)=> link.short_url.toString() === inputId);
@@ -56,7 +52,7 @@ app.get('/api/shorturl/:inputId', function(req, res) {
     if(!http.test(urlObject.original_url)){
       urlObject.original_url = urlObject.original_url.replace('', 'http://');
     }
-    return res.status(301).redirect(urlObject.original_url);
+    return res.redirect(urlObject.original_url);
   }
   else{
     return res.json({
