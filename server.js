@@ -25,10 +25,13 @@ app.get('/api/shorturl/:short_url', function(req, res) {
 app.use(bodyParser.urlencoded({extended: false}));
 
 app.post('/api/shorturl', (req, res)=>{
-  let {url} = req.body
-
+  let {url} = req.body;
+  url = url.replace(/^https\:\/\//, '');
+  console.log(url);
   dns.lookup(url, (err, address)=>{
-    if(err)return console.log(err);
+    if(err)return res.json({
+      error: "invalid url"
+    });
     res.json({
       original_url: url,
       short_url: 1
