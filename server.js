@@ -23,10 +23,11 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 let links = [];
 let id = 0; 
+let http = /^https?\:\/\//;
 
 app.post('/api/shorturl', (req, res)=>{
   let {url} = req.body;
-  let dnsUrl = url.replace(/^https\:\/\//, '').replace(/\/$/, '');
+  let dnsUrl = url.replace(http, '').replace(/\/$/, '');
 
   dns.lookup(dnsUrl, (err, address)=>{
     if(err)return res.json({
@@ -37,6 +38,7 @@ app.post('/api/shorturl', (req, res)=>{
       original_url: url,
       short_url: id
     }
+    console.log(urls);
     links.push(urls);
     
     return res.json(urls);
@@ -44,11 +46,18 @@ app.post('/api/shorturl', (req, res)=>{
 })
 app.get('/api/shorturl/:inputId', function(req, res) {
   let {inputId} = req.params;
-  console.log("inputId:", inputId)
   let urlObject = links.find((link)=> link.short_url.toString() === inputId);
-  console.log('url:' ,urlObject.original_url);
+  
   if(urlObject){
+    if(!http.test(urlObject.original_url)){
+      urlObject.original_url = urlObject.original_url.replace('', 'http://');
+    }
     return res.status(301).redirect(urlObject.original_url);
+  }
+  else{
+    return res.json({
+      error: "invalid url"
+    })
   }
   
 });
