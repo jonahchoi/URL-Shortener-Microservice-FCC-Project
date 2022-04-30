@@ -44,11 +44,11 @@ app.post('/api/shorturl', (req, res)=>{
 })
 app.get('/api/shorturl/:inputId', function(req, res) {
   let {inputId} = req.params;
-  console.log(inputId)
+  console.log("inputId:", inputId)
   let urlObject = links.find((link)=> link.short_url.toString() === inputId);
-  console.log(urlObject);
+  console.log('url:' ,urlObject.original_url);
   if(urlObject){
-    return res.redirect(urlObject.original_url);
+    return res.status(301).redirect(urlObject.original_url);
   }
   
 });
