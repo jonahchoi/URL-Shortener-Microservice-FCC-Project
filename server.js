@@ -30,7 +30,7 @@ app.post('/api/shorturl', (req, res)=>{
   dns.lookup(url, (err, address)=>{
     if(err)return console.log(err);
     res.json({
-      original_url: address
+      original_url: url
     })
   })
 })
