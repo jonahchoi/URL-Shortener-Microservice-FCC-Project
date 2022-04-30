@@ -42,16 +42,12 @@ app.post('/api/shorturl', (req, res)=>{
     res.json(urls);
   })
 })
-app.get('/api/shorturl/:short_url', function(req, res) {
-  let {short_url} = req.query;
-  let urlObject = links.find((link)=> link.short_url === short_url)
-  
-             {
-    if(link.short_url === short_url){
-      console.log(link.original_url)
-      res.redirect(link.original_url);
-    }
-  })
+app.get('/api/shorturl/:inputId', function(req, res) {
+  let {inputId} = req.params;
+  let urlObject = links.find((link)=> link.short_url.toString() === inputId);
+  if(urlObject){
+    res.redirect(urlObject.original_url);
+  }
 });
 
 app.listen(port, function() {
