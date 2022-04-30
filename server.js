@@ -50,6 +50,7 @@ app.get('/api/shorturl/:inputId', function(req, res) {
   if(urlObject){
     return res.redirect(urlObject.original_url);
   }
+  
 });
 
 app.listen(port, function() {
