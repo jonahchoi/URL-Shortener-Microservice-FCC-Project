@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const bodyParser = require('body-parser');
+const dns = require('dns');
 
 // Basic Configuration
 const port = process.env.PORT || 3000;
@@ -24,7 +25,14 @@ app.get('/api/shorturl/:short_url', function(req, res) {
 app.use(bodyParser.urlencoded({extended: false}));
 
 app.post('/api/shorturl', (req, res)=>{
-  console.log(req.body);
+  let {url} = req.body
+
+  dns.lookup(url, (err, address)=>{
+    if(err)return console.log(err);
+    res.json({
+      original_url: address
+    })
+  })
 })
 
 app.listen(port, function() {
